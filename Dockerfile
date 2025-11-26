@@ -1,9 +1,9 @@
-FROM rocker/rstudio:4.4.2 
+FROM quay.io/jupyter/minimal-notebook
 
-# set renv library path inside the container
-ENV RENV_PATHS_ROOT=/home/rstudio/renv 
+COPY conda-linux-64.lock /home/conda-linux-64.lock
 
-# ensure the renv library directory exists
-RUN mkdir -p /home/rstudio/renv 
+RUN mamba install --file /home/conda-linux-64.lock \
+    && mamba clean --all -y -f \
+    && fix-permissions "${CONDA_DIR}" \
+    && fix-permissions "/home/${NB_USER}"
 
-# set 
